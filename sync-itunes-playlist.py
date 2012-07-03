@@ -35,7 +35,7 @@ if __name__ == "__main__":
     destination = args[1]
 
     if os.path.isdir(destination) == False:
-        print "Destination \'%s\' doesn't exist!" % destination
+        print "Destination '%s' doesn't exist!" % destination
         sys.exit(False)
 
     print "Loading iTunes Library... ", 
@@ -61,7 +61,6 @@ if __name__ == "__main__":
 
     for item in trackids:
         cur = library['Tracks'][item]
-        print "Track: '" + cur['Artist'] + " - " + cur['Name'] + "'...",
         url = cur['Location']
         (scheme, netloc, path, ignored, ignored, ignored)  = urlparse(url)
         if scheme == "file" and netloc == "localhost":
@@ -79,13 +78,15 @@ if __name__ == "__main__":
             dest = destpath + "/" + pathelem[-1]
             deststr = "\"" + destpath + "/" + pathelem[-1] + "\""
 
+            print "Track: '" + cur['Artist'] + " - " + cur['Name'] + "'...",
             if os.path.isfile(dest):
                 print "skipped (already exists)"
                 continue
 
-            newcmd = rcmd + " " + srcstr + " " + deststr
+            newcmd = "%s %s %s" % (rcmd, srcstr, deststr)
             ret = subprocess.Popen(newcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print "copied." 
         else:
+            print "Track: '" + path.encode('ascii') + "'...",
             print "skipped (not a local file)"
 
