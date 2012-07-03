@@ -2,21 +2,15 @@
 
 import optparse
 import sys
-import base64
 import os
 import xml.sax
 from simple_data_handler import SimpleDataHandler
-import shutil
 import unicodedata
 import urllib2
 from urlparse import urlparse
-from stat import *
 import subprocess
 
-playlist="XPeria Sola"
-destination="/Volumes/Beta/test/"
-
-rcmd="rsync --human-readable --size-only -progress"
+rcmd="rsync --size-only"
 
 if __name__ == "__main__":
     usage = "usage: %prog [options] <playlist> <destination>"
