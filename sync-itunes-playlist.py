@@ -1,5 +1,4 @@
 #!/opt/local/bin/python
-# -*- coding: utf-8 -*-
 
 import optparse
 import sys
@@ -19,19 +18,6 @@ destination="/Volumes/Beta/test/"
 
 rcmd="rsync --human-readable --size-only -progress"
 
-def urlunescape(urltext):
-    """ Unescape a URL text part containing %xx-character encodings
-        adapted from mxURL
-        @@ replace with url.unquote() it looks like
-    """
-    hl = urltext.split('%') ##charsplit(urltext,'%')
-    if len(hl) > 1:
-        rest = hl[1:]
-        for i,text in enumerate(rest):
-            rest[i] = chr(int(text[:2], 16)) + text[2:]
-        return hl[0] + ''.join(rest)
-    return urltext
-#
 if __name__ == "__main__":
     parser = optparse.OptionParser()
     parser.add_option("-l", '--library-file', dest='library_file', 
