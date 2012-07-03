@@ -17,6 +17,16 @@ rcmd="rsync --size-only"
 
 trackids=[]
 
+class MyPanel(wx.Panel):
+    def __init__(self, parent, id):
+        wx.Panel.__init__(self, parent, id)
+        caption = wx.StaticText(self, id, label="Loading iTunes Library", pos=(10, 10))
+        self.SetBackgroundColour("white")
+        gif_fname = "waiting.gif"
+        gif = wx.animate.GIFAnimationCtrl(self, id, gif_fname, pos=(10, 30))
+        gif.GetPlayer().UseBackgroundColour(True)
+        gif.Play()
+
 def start(func, *args): # helper method to run a function in another thread
     thread = threading.Thread(target=func, args=args)
     thread.setDaemon(True)
@@ -26,8 +36,8 @@ def progressbar_update(dialog, value, msg):
     cont, skip = dialog.Update(value, msg) 
     if not cont:
         sys.exit(1)
-    
-def worker(dialog, library, trackids, destination): # put your logic here
+ 
+def copyworker(dialog, library, trackids, destination): # put your logic here
     keepGoing = True
     for pos, item in enumerate(trackids):
         if not keepGoing:
@@ -119,14 +129,22 @@ def main():
         print "Destination '%s' doesn't exist!" % destination
         sys.exit(False)
 
+    app = wx.PySimpleApp()
+
+    frame = wx.Frame(None, -1, "wx.animate.GIFAnimationCtrl()", size = (300, 300))
+    MyPanel(frame, -1)
+
+    frame.Show(True)
+    frame.Center()
     library = parse_TunesXML(file_loc)
     tracks = parse_Playlist(library, playlist)
+    frame.Show(False)
 
-    app = wx.PySimpleApp()
     progressMax = len(trackids)
     dialog = wx.ProgressDialog("Copying Files", "test", progressMax, style=wx.PD_CAN_ABORT)
     dialog.SetSize((500,100))
-    start(worker, dialog, library, trackids, destination)
+    dialog.Center()
+    start(copyworker, dialog, library, trackids, destination)
     dialog.ShowModal()
     app.MainLoop()
     
